@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SDL × MDL — Strategy‑Driven & Motivation‑Driven Learning</title>
+  <meta name="description" content="Robert Catanuto’s Strategy‑Driven Learning (SDL) and Motivation‑Driven Learning (MDL) — a practical, research‑informed framework for math and science education, designed for underserved and crisis contexts." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#faf8f5;      /* warm paper */
+      --ink:#1b1b1b;     /* deep gray */
+      --muted:#6b6b6b;   /* muted text */
+      --brand:#4a5d9d;   /* calm indigo */
+      --accent:#9d5e4a;  /* terracotta */
+      --card:#ffffff;    /* cards */
+      --ring:#e7e2da;    /* subtle borders */
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg:#0f1115; --ink:#f3f2ef; --muted:#b7b6b2; --brand:#9ab0ff; --accent:#f1a38e; --card:#171a20; --ring:#2a2e36;
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0}
+    body{
+      font-family: Merriweather, Georgia, "Times New Roman", serif;
+      background:var(--bg); color:var(--ink);
+      line-height:1.55; font-size:18px;
+    }
+    .container{max-width:980px; margin:0 auto; padding:24px}
+    header{position:sticky; top:0; backdrop-filter:saturate(1.2) blur(6px); background:color-mix(in oklab, var(--bg) 88%, transparent); border-bottom:1px solid var(--ring);}
+    nav{display:flex; align-items:center; gap:18px; padding:12px 0}
+    nav a{color:var(--ink); text-decoration:none; padding:8px 12px; border-radius:12px}
+    nav a:hover{background:var(--ring)}
+    .badge{font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--brand)}
+    .hero{display:grid; grid-template-columns: 1.1fr .9fr; gap:28px; align-items:center; padding:48px 0 12px}
+    .title{font-weight:900; font-size:clamp(32px, 4vw, 52px); line-height:1.12; margin:0}
+    .subtitle{color:var(--muted); margin-top:10px}
+    .cta{display:flex; gap:12px; margin-top:22px}
+    .btn{border:1px solid var(--ring); background:var(--card); padding:10px 16px; border-radius:999px; text-decoration:none; color:var(--ink)}
+    .btn.primary{background:var(--brand); color:white; border-color:color-mix(in oklab, var(--brand) 70%, black)}
+    .grid{display:grid; gap:18px}
+    .twocol{grid-template-columns:1fr 1fr}
+    .card{background:var(--card); border:1px solid var(--ring); border-radius:18px; padding:20px}
+    h2{margin-top:28px; font-size:28px}
+    h3{margin-top:16px; font-size:20px}
+    ul{margin:10px 0 0 20px}
+    .kudos{font-size:14px; color:var(--muted)}
+    footer{margin:42px 0 24px; color:var(--muted); font-size:14px}
+    .mono{font-variant-ligatures:none; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    /* Simple print tweaks */
+    @media print{ header, .cta {display:none} body{background:white} .card{break-inside:avoid} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a href="#top" class="mono">SDL × MDL</a>
+        <a href="#sdl">SDL</a>
+        <a href="#mdl">MDL</a>
+        <a href="#cases">Cases</a>
+        <a href="#downloads">Downloads</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="container">
+    <section class="hero">
+      <div>
+        <div class="badge">Strategy & Meaning in Learning</div>
+        <h1 class="title">Strategy‑Driven Learning (SDL) × Motivation‑Driven Learning (MDL)</h1>
+        <p class="subtitle">A double‑helix framework for deeply human math & science learning. SDL equips learners with <strong>problem‑solving strategies</strong>. MDL provides the <strong>purpose, projects, and belonging</strong> that sustain effort—especially for students who have been overlooked or are learning in fragile contexts.</p>
+        <div class="cta">
+          <a class="btn primary" href="#downloads">Get PDF</a>
+          <a class="btn" href="#sdl">Explore SDL</a>
+          <a class="btn" href="#mdl">Explore MDL</a>
+        </div>
+        <p class="kudos">By Robert Catanuto — Teacher, mentor, and friend of learners.</p>
+      </div>
+      <div class="card">
+        <!-- Inline SVG: SDL ⇄ MDL double‑helix schematic -->
+        <svg viewBox="0 0 700 480" width="100%" height="auto" aria-label="SDL MDL schematic" role="img">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="var(--brand)"/><stop offset="1" stop-color="var(--accent)"/></linearGradient>
+          </defs>
+          <rect x="0" y="0" width="700" height="480" rx="16" fill="none" stroke="var(--ring)" />
+          <!-- Rails -->
+          <path d="M60,60 C200,120 500,120 640,60" fill="none" stroke="var(--brand)" stroke-width="3"/>
+          <path d="M60,420 C200,360 500,360 640,420" fill="none" stroke="var(--accent)" stroke-width="3"/>
+          <!-- Crossbars (experiences → projects → problems/strategies) -->
+          <g stroke="url(#g1)" stroke-width="3">
+            <line x1="120" y1="120" x2="580" y2="360" />
+            <line x1="200" y1="140" x2="500" y2="340" />
+            <line x1="280" y1="160" x2="420" y2="320" />
+          </g>
+          <!-- Nodes -->
+          <g>
+            <rect x="90" y="90" width="140" height="60" rx="12" fill="var(--card)" stroke="var(--ring)"/>
+            <text x="160" y="125" text-anchor="middle" font-size="14">Experiences</text>
+
+            <rect x="280" y="180" width="140" height="60" rx="12" fill="var(--card)" stroke="var(--ring)"/>
+            <text x="350" y="215" text-anchor="middle" font-size="14">Projects</text>
+
+            <rect x="470" y="270" width="140" height="90" rx="12" fill="var(--card)" stroke="var(--ring)"/>
+            <text x="540" y="305" text-anchor="middle" font-size="14">Problems &amp; Strategies</text>
+          </g>
+          <!-- Labels -->
+          <text x="70" y="50" font-size="12" fill="var(--brand)">SDL: methods</text>
+          <text x="70" y="440" font-size="12" fill="var(--accent)">MDL: meaning</text>
+        </svg>
+        <p style="margin:10px 0 0; color:var(--muted); font-size:14px">Inline schematic: the two rails (SDL & MDL) and their rungs (learning flow). CC‑BY‑SA.</p>
+      </div>
+    </section>
+
+    <section id="sdl" class="grid twocol">
+      <article class="card">
+        <h2>SDL — Strategy‑Driven Learning</h2>
+	        <p>SDL organizes curricula around <em>problem‑solving strategies</em>, not just topics. Learners practice habits like <strong>specializing</strong>, <strong>generalizing</strong>, <strong>working backwards</strong>, <strong>draw a diagram</strong>, <strong>invariant chasing</strong>, and <strong>extreme cases</strong>—so they can transfer thinking across domains.</p>
+        <h3>Core Elements</h3>
+        <ul>
+          <li><strong>Strategy spine:</strong> units indexed by strategies; concepts appear as contexts to apply them.</li>
+          <li><strong>Progressions:</strong> Experiences → Projects → Problems/Strategies (with reflection prompts).</li>
+          <li><strong>Assessment as coaching:</strong> rubrics score <em>strategy use</em> (e.g., evidence, iteration, communication).</li>
+          <li><strong>Artifacts:</strong> notebooks with “spot‑the‑mistake → rewrite neatly in a second column”.</li>
+        </ul>
+      </article>
+      <aside class="card">
+        <h3>Why it helps</h3>
+        <ul>
+          <li>Builds durable transfer beyond a single chapter or test.</li>
+          <li>Centers mathematical thinking over rote procedures.</li>
+          <li>Works well with <em>Exploding Dots</em>, ISLE labs, and AoPS‑style problem sets.</li>
+          <li>Suitable for mixed‑ability classes and tutoring.</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section id="mdl" class="grid twocol">
+      <article class="card">
+        <h2>MDL — Motivation‑Driven Learning</h2>
+        <p>MDL supplies the fuel: <strong>purpose, belonging, and hope</strong>. It frames learning in meaningful projects and teams, so students—especially in fragile or underserved settings—see their work as service and growth, not just grades.</p>
+        <h3>Core Elements</h3>
+        <ul>
+          <li><strong>Projects that matter:</strong> community‑linked challenges with real audiences.</li>
+          <li><strong>Teams & roles:</strong> rotating responsibilities (explainer, checker, encourager).</li>
+          <li><strong>Small wins:</strong> visible progress charts; mastery streaks.</li>
+          <li><strong>Spiritual care:</strong> optional quiet minute; gratitude & intentions (for faith‑based contexts).</li>
+        </ul>
+      </article>
+      <aside class="card">
+        <h3>Why it helps</h3>
+        <ul>
+          <li>Stabilizes attention and effort over time.</li>
+          <li>Humanizes difficulty—errors become information, not identity.</li>
+          <li>Aligns with humanitarian education (EiE) where safety and meaning are vital.</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section id="cases" class="grid twocol">
+      <div class="card">
+        <h2>Cases & Use</h2>
+        <ul>
+          <li><strong>Tutoring mathematics (middle/high school):</strong> weekly SDL strategy focus; MDL project every 3–4 weeks.</li>
+          <li><strong>Teacher PD:</strong> demo lessons built around a single strategy and debrief.</li>
+          <li><strong>EiE contexts:</strong> low‑tech tasks, peer teaching, bilingual prompts, printable kits.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Downloadables</h3>
+        <p>All materials are licensed <span class="mono">CC‑BY‑SA</span>. Free to use, adapt, and share with attribution.</p>
+        <ul>
+          <li><a href="#downloads">1‑page overview (PDF)</a></li>
+          <li><a href="#downloads">SDL unit template (PDF)</a></li>
+          <li><a href="#downloads">MDL project brief (PDF)</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="downloads" class="card">
+      <h2>Downloads</h2>
+      <p>Coming next: printable PDFs of the overview, templates, and rubrics. If you want these added first, tell me which ones you need.</p>
+    </section>
+
+    <section id="contact" class="card">
+      <h2>Contact</h2>
+      <p>Interested in mentoring, collaboration, or bringing SDL × MDL to your community? Reach out on LinkedIn or by email.</p>
+      <ul>
+        <li><strong>Author:</strong> Robert Catanuto</li>
+        <li><strong>License:</strong> CC‑BY‑SA 4.0</li>
+      </ul>
+    </section>
+
+    <footer>
+      <p>© <span id="y"></span> Robert Catanuto. Built with love for learners. SDL × MDL is shared openly to serve children and educators everywhere.</p>
+      <script>document.getElementById('y').textContent = new Date().getFullYear()</script>
+    </footer>
+  </main>
+</body>
+</html>
