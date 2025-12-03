@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MDL Pathway – Topics → Projects → Roles → Problems</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --bg: #0f172a;
+      --card: #020617;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.12);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #f97373;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #1e293b, #020617);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 1.5rem;
+    }
+
+    .app {
+      max-width: 1100px;
+      width: 100%;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.98));
+      border-radius: 1.5rem;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      box-shadow:
+        0 24px 60px rgba(15, 23, 42, 0.80),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+      padding: 1.8rem 2rem 2.2rem;
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 1.6fr);
+      gap: 1.75rem;
+    }
+
+    @media (max-width: 880px) {
+      body {
+        padding: 0.75rem;
+      }
+      .app {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 1.4rem;
+        border-radius: 1.1rem;
+      }
+    }
+
+    header {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      gap: 1rem;
+    }
+
+    header h1 {
+      font-size: 1.45rem;
+      margin: 0;
+      letter-spacing: 0.03em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    header h1 span.badge {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 0.1rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: var(--muted);
+    }
+
+    header p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--muted);
+      max-width: 360px;
+    }
+
+    .stepper {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .step-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.65);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      background: radial-gradient(circle at 30% 0%, #1f2937, #020617);
+    }
+
+    .step-dot.active {
+      border-color: var(--accent);
+      background: radial-gradient(circle at 10% 0%, #38bdf8, #0f172a);
+      color: #0f172a;
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
+    }
+
+    .stepper span.label {
+      opacity: 0.9;
+    }
+
+    main {
+      border-radius: 1.1rem;
+      background: radial-gradient(circle at top left, rgba(15, 118, 110, 0.28), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      padding: 1.3rem 1.2rem 1.4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    main::before {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.15), transparent 52%),
+        radial-gradient(circle at 100% 0%, rgba(94, 234, 212, 0.16), transparent 58%);
+      opacity: 0.6;
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+    }
+
+    .step {
+      display: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .step-header h2 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .step-header p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+      max-width: 260px;
+    }
+
+    .tiles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .tile {
+      border-radius: 0.9rem;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      padding: 0.85rem 0.85rem 0.9rem;
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.95));
+      color: var(--text);
+      font-size: 0.9rem;
+      text-align: left;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 3.1rem;
+      transition:
+        transform 0.12s ease-out,
+        box-shadow 0.12s ease-out,
+        border-color 0.12s ease-out,
+        background 0.12s ease-out;
+    }
+
+    .tile::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.08), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.12s ease-out;
+      pointer-events: none;
+    }
+
+    .tile span.label-main {
+      font-weight: 500;
+    }
+
+    .tile span.label-sub {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.4rem;
+    }
+
+    .tile:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.85);
+      border-color: rgba(56, 189, 248, 0.7);
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.9), #020617);
+    }
+
+    .tile:hover::before {
+      opacity: 1;
+    }
+
+    .tile.selected {
+      border-color: var(--accent);
+      box-shadow:
+        0 0 0 1px rgba(56, 189, 248, 0.7),
+        0 16px 32px rgba(15, 23, 42, 0.9);
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.24), rgba(15, 23, 42, 0.96));
+    }
+
+    .tile.selected::before {
+      opacity: 1;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      border-radius: 999px;
+      padding: 0.18rem 0.5rem;
+      font-size: 0.7rem;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      color: var(--muted);
+    }
+
+    .pill span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .sidebar {
+      border-radius: 1.1rem;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 1));
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 1.1rem 1rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sidebar::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.2), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(251, 191, 36, 0.18), transparent 60%);
+      opacity: 0.75;
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+    }
+
+    .sidebar > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .sidebar h3 {
+      margin: 0;
+      font-size: 0.95rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sidebar h3 span {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .summary-block {
+      border-radius: 0.85rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      padding: 0.6rem 0.65rem 0.65rem;
+      font-size: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .summary-label {
+      color: var(--muted);
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+    }
+
+    .summary-value {
+      font-weight: 500;
+      text-align: right;
+    }
+
+    .summary-placeholder {
+      color: rgba(148, 163, 184, 0.7);
+      font-style: italic;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-top: 0.3rem;
+    }
+
+    .chip {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      padding: 0.18rem 0.55rem;
+      font-size: 0.73rem;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .chip.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .sidebar-footer {
+      margin-top: 0.3rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .sidebar-footer strong {
+      color: #e4e4e7;
+      font-weight: 600;
+    }
+
+    .buttons-row {
+      margin-top: 0.4rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 0.35rem 0.8rem;
+      font-size: 0.75rem;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition:
+        background 0.12s ease-out,
+        border-color 0.12s ease-out,
+        transform 0.08s ease-out;
+    }
+
+    .btn:hover {
+      background: rgba(15, 23, 42, 1);
+      border-color: var(--accent);
+      transform: translateY(-0.5px);
+    }
+
+    .btn-primary {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      color: #0b1120;
+      font-weight: 500;
+      box-shadow: 0 8px 20px rgba(56, 189, 248, 0.45);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #7dd3fc, #38bdf8);
+    }
+
+    .helper {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.6rem;
+    }
+
+    .helper strong {
+      color: #e5e7eb;
+    }
+
+    .problems-note {
+      margin-top: 0.55rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .problems-note span {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .hint-error {
+      color: var(--danger);
+      font-size: 0.75rem;
+      margin-top: 0.3rem;
+      display: none;
+    }
+
+    .hint-error.visible {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>
+          MDL Pathway
+          <span class="badge">Prototype • v0.1</span>
+        </h1>
+        <p>
+          Start from a real-world <strong>topic</strong>, choose a <strong>project</strong>, build a
+          <strong>team</strong>, then dive into meaningful <strong>problems</strong>.
+        </p>
+      </div>
+      <div class="stepper" id="stepper">
+        <span class="step-dot active" data-step="1">1</span>
+        <span>›</span>
+        <span class="step-dot" data-step="2">2</span>
+        <span>›</span>
+        <span class="step-dot" data-step="3">3</span>
+        <span>›</span>
+        <span class="step-dot" data-step="4">4</span>
+        <span class="label">Topics → Projects → Roles → Problems</span>
+      </div>
+    </header>
+
+    <main>
+      <!-- STEP 1: TOPICS -->
+      <section class="step active" id="step-1">
+        <div class="step-header">
+          <h2>Step 1 · Choose a Topic</h2>
+          <p>
+            Begin with an area of human experience that actually matters to you. This is your compass for the whole journey.
+          </p>
+        </div>
+        <div class="tiles-grid" id="topics-grid"></div>
+        <p class="helper">
+          Click <strong>one</strong> topic tile to continue.
+        </p>
+        <p class="hint-error" id="error-1">Please choose a topic to continue.</p>
+      </section>
+
+      <!-- STEP 2: PROJECTS -->
+      <section class="step" id="step-2">
+        <div class="step-header">
+          <h2>Step 2 · Choose a Project</h2>
+          <p>
+            Inside your topic, pick a concrete project you’d like to build, investigate, or transform. This turns “interest” into a mission.
+          </p>
+        </div>
+        <div class="tiles-grid" id="projects-grid"></div>
+        <p class="helper">
+          Choose <strong>one</strong> project to make your topic concrete.
+        </p>
+        <p class="hint-error" id="error-2">Please choose a project to continue.</p>
+      </section>
+
+      <!-- STEP 3: ROLES -->
+      <section class="step" id="step-3">
+        <div class="step-header">
+          <h2>Step 3 · Build Your Team</h2>
+          <p>
+            No journey alone. Decide what kind of contribution you’d like to bring into the project team.
+          </p>
+        </div>
+        <div class="tiles-grid" id="roles-grid"></div>
+        <p class="helper">
+          Choose the <strong>role</strong> that fits you best for this project. (Teams can later include multiple roles.)
+        </p>
+        <p class="hint-error" id="error-3">Please choose at least one role to continue.</p>
+      </section>
+
+      <!-- STEP 4: PROBLEMS -->
+      <section class="step" id="step-4">
+        <div class="step-header">
+          <h2>Step 4 · Start Solving Problems</h2>
+          <p>
+            Now the real work begins. Tackle as many problems as you can, iterating on each prototype and using powerful strategies.
+          </p>
+        </div>
+        <div class="tiles-grid" id="problems-grid"></div>
+        <p class="problems-note">
+          Select one or more problems above. Your team can <span>return, revise, and extend</span> them as your project evolves.
+        </p>
+      </section>
+    </main>
+
+    <!-- SIDEBAR SUMMARY -->
+    <aside class="sidebar">
+      <h3>
+        Your MDL Journey
+        <span>Live summary</span>
+      </h3>
+
+      <div class="summary-block">
+        <div class="summary-row">
+          <span class="summary-label">Topic</span>
+          <span class="summary-value" id="summary-topic">
+            <span class="summary-placeholder">Not chosen yet</span>
+          </span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Project</span>
+          <span class="summary-value" id="summary-project">
+            <span class="summary-placeholder">Not chosen yet</span>
+          </span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Role</span>
+          <span class="summary-value" id="summary-role">
+            <span class="summary-placeholder">Not chosen yet</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="summary-block">
+        <div class="summary-row">
+          <span class="summary-label">Problems</span>
+          <span class="summary-value" id="summary-problems-count">0 selected</span>
+        </div>
+        <div class="chips" id="summary-problems-chips"></div>
+      </div>
+
+      <div class="sidebar-footer">
+        This prototype follows the MDL cycle:
+        <strong>Topic → Project → Team → Problems</strong>.<br />
+        You can restart anytime to explore a different pathway.
+      </div>
+
+      <div class="buttons-row">
+        <button class="btn" id="btn-back">
+          ← Back
+        </button>
+        <button class="btn btn-primary" id="btn-restart">
+          Restart Pathway
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    // --- DATA (directly reflecting your draft) -----------------------
+    const topics = [
+      "Design",
+      "Justice",
+      "Water",
+      "Migration",
+      "Shelter",
+      "Space Exploration",
+      "Money",
+      "Health"
+    ];
+
+    const projects = [
+      "Template Project 1",
+      "Template Project 2",
+      "Template Project 3",
+      "Template Project 4",
+      "Template Project 5",
+      "Template Project 6",
+      "Template Project 7",
+      "Template Project 8"
+    ];
+
+    const roles = [
+      "Template Role 1",
+      "Template Role 2",
+      "Template Role 3",
+      "Template Role 4",
+      "Template Role 5",
+      "Template Role 6",
+      "Template Role 7",
+      "Template Role 8"
+    ];
+
+    const problems = [
+      "Template Problem 1",
+      "Template Problem 2",
+      "Template Problem 3",
+      "Template Problem 4",
+      "Template Problem 5",
+      "Template Problem 6",
+      "Template Problem 7",
+      "Template Problem 8"
+    ];
+
+    // --- STATE -------------------------------------------------------
+    let currentStep = 1;
+    const state = {
+      topic: null,
+      project: null,
+      role: null,
+      problems: new Set()
+    };
+
+    // --- HELPERS -----------------------------------------------------
+    function $(selector) {
+      return document.querySelector(selector);
+    }
+
+    function $all(selector) {
+      return document.querySelectorAll(selector);
+    }
+
+    function clearSelection(containerSelector) {
+      $all(containerSelector + " .tile").forEach(tile =>
+        tile.classList.remove("selected")
+      );
+    }
+
+    function updateSummary() {
+      // Topic
+      const topicEl = $("#summary-topic");
+      topicEl.innerHTML = state.topic
+        ? state.topic
+        : '<span class="summary-placeholder">Not chosen yet</span>';
+
+      // Project
+      const projectEl = $("#summary-project");
+      projectEl.innerHTML = state.project
+        ? state.project
+        : '<span class="summary-placeholder">Not chosen yet</span>';
+
+      // Role
+      const roleEl = $("#summary-role");
+      roleEl.innerHTML = state.role
+        ? state.role
+        : '<span class="summary-placeholder">Not chosen yet</span>';
+
+      // Problems
+      const countEl = $("#summary-problems-count");
+      const chipsEl = $("#summary-problems-chips");
+      const arr = Array.from(state.problems);
+      countEl.textContent = arr.length + (arr.length === 1 ? " selected" : " selected");
+      chipsEl.innerHTML = "";
+      arr.forEach(p => {
+        const chip = document.createElement("div");
+        chip.className = "chip active";
+        chip.textContent = p;
+        chipsEl.appendChild(chip);
+      });
+    }
+
+    function setStep(step) {
+      currentStep = step;
+      // toggle main panels
+      $all(".step").forEach((panel, idx) => {
+        panel.classList.toggle("active", idx === step - 1);
+      });
+      // toggle dots
+      $all(".step-dot").forEach(dot => {
+        const s = Number(dot.dataset.step);
+        dot.classList.toggle("active", s === step);
+      });
+      // hide all error hints on step change
+      $all(".hint-error").forEach(h => h.classList.remove("visible"));
+    }
+
+    function showError(step) {
+      const errEl = $("#error-" + step);
+      if (errEl) errEl.classList.add("visible");
+    }
+
+    // --- RENDER TILES -----------------------------------------------
+    function renderTiles(containerId, items, options = {}) {
+      const container = $("#" + containerId);
+      container.innerHTML = "";
+      items.forEach((item, index) => {
+        const btn = document.createElement("button");
+        btn.className = "tile";
+        btn.innerHTML = `
+          <span class="label-main">${item}</span>
+          ${
+            options.showIndex
+              ? `<span class="label-sub">${options.prefix || ""} ${index + 1}</span>`
+              : ""
+          }
+        `;
+        btn.addEventListener("click", () => {
+          options.onClick && options.onClick(item, btn);
+        });
+        container.appendChild(btn);
+      });
+    }
+
+    // --- INITIALISE --------------------------------------------------
+    function init() {
+      // Step 1: Topics
+      renderTiles("topics-grid", topics, {
+        showIndex: false,
+        onClick: (topic, btn) => {
+          clearSelection("#topics-grid");
+          btn.classList.add("selected");
+          state.topic = topic;
+          updateSummary();
+          setStep(2);
+        }
+      });
+
+      // Step 2: Projects
+      renderTiles("projects-grid", projects, {
+        showIndex: true,
+        prefix: "Project",
+        onClick: (project, btn) => {
+          clearSelection("#projects-grid");
+          btn.classList.add("selected");
+          state.project = project;
+          updateSummary();
+          setStep(3);
+        }
+      });
+
+      // Step 3: Roles
+      renderTiles("roles-grid", roles, {
+        showIndex: true,
+        prefix: "Role",
+        onClick: (role, btn) => {
+          clearSelection("#roles-grid");
+          btn.classList.add("selected");
+          state.role = role;
+          updateSummary();
+          setStep(4);
+        }
+      });
+
+      // Step 4: Problems (multi-select)
+      renderTiles("problems-grid", problems, {
+        showIndex: true,
+        prefix: "Problem",
+        onClick: (problem, btn) => {
+          const isSelected = btn.classList.contains("selected");
+          if (isSelected) {
+            btn.classList.remove("selected");
+            state.problems.delete(problem);
+          } else {
+            btn.classList.add("selected");
+            state.problems.add(problem);
+          }
+          updateSummary();
+        }
+      });
+
+      // Navigation buttons
+      $("#btn-back").addEventListener("click", () => {
+        if (currentStep === 1) return;
+        setStep(currentStep - 1);
+      });
+
+      $("#btn-restart").addEventListener("click", () => {
+        state.topic = null;
+        state.project = null;
+        state.role = null;
+        state.problems.clear();
+        clearSelection("#topics-grid");
+        clearSelection("#projects-grid");
+        clearSelection("#roles-grid");
+        clearSelection("#problems-grid");
+        updateSummary();
+        setStep(1);
+      });
+
+      updateSummary();
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
