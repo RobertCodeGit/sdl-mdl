@@ -449,6 +449,32 @@
     .hint-error.visible {
       display: block;
     }
+
+    /* Subtopics panel in Step 2 */
+    #subtopics-panel {
+      margin-bottom: 0.9rem;
+      padding: 0.75rem 0.7rem;
+      border-radius: 0.7rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 0.8rem;
+    }
+
+    #subtopics-panel h3 {
+      margin: 0 0 0.25rem;
+      font-size: 0.86rem;
+    }
+
+    #subtopics-list {
+      margin: 0.15rem 0 0;
+      padding-left: 1.1rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    #subtopics-list li {
+      margin-bottom: 0.15rem;
+    }
   </style>
 </head>
 <body>
@@ -457,7 +483,7 @@
       <div>
         <h1>
           MDL Pathway
-          <span class="badge">Prototype • v0.1</span>
+          <span class="badge">Prototype • v0.2</span>
         </h1>
         <p>
           Start from a real-world <strong>topic</strong>, choose a <strong>project</strong>, build a
@@ -492,14 +518,20 @@
         <p class="hint-error" id="error-1">Please choose a topic to continue.</p>
       </section>
 
-      <!-- STEP 2: PROJECTS -->
+      <!-- STEP 2: SUB-TOPICS + PROJECTS -->
       <section class="step" id="step-2">
         <div class="step-header">
-          <h2>Step 2 · Choose a Project</h2>
+          <h2>Step 2 · Choose a Sub-topic &amp; Project</h2>
           <p>
-            Inside your topic, pick a concrete project you’d like to build, investigate, or transform. This turns “interest” into a mission.
+            Inside your topic, focus on one sub-area and pick a project that turns your interest into action.
           </p>
         </div>
+
+        <div id="subtopics-panel">
+          <h3>Step 2a · Choose a sub-topic (just by reading and pointing)</h3>
+          <ul id="subtopics-list"></ul>
+        </div>
+
         <div class="tiles-grid" id="projects-grid"></div>
         <p class="helper">
           Choose <strong>one</strong> project to make your topic concrete.
@@ -591,49 +623,248 @@
   </div>
 
   <script>
-    // --- DATA (directly reflecting your draft) -----------------------
-    const topics = [
-      "Design",
-      "Justice",
-      "Water",
-      "Migration",
-      "Shelter",
-      "Space Exploration",
-      "Money",
-      "Health"
-    ];
+    // --- DATA: MDL topics → sub-topics → projects --------------------
+    const mdlData = {
+      "Nature & Phenomena": {
+        subtopics: [
+          "Rainbows",
+          "Balance and falling",
+          "Sound vibrations",
+          "Magnetism",
+          "Seasons",
+          "Weather patterns",
+          "Light and shadows",
+          "Plant growth",
+          "Simple machines in nature"
+        ],
+        projects: [
+          {
+            title: "Observe & Capture",
+            description: "Build an observation gallery of photos, sketches, or notes about your phenomenon."
+          },
+          {
+            title: "Mini-Experiment",
+            description: "Design a small experiment to test one focused question about it."
+          },
+          {
+            title: "Build a Model",
+            description: "Create a physical or drawn model that explains what you observed."
+          }
+        ]
+      },
+      "Technology & Everyday Tools": {
+        subtopics: [
+          "How smartphones work",
+          "GPS and maps",
+          "Bluetooth & Wi-Fi",
+          "Battery life",
+          "Elevators",
+          "Bicycle mechanics",
+          "Drones",
+          "Robots & sensors",
+          "How websites load"
+        ],
+        projects: [
+          {
+            title: "Inside the Machine",
+            description: "Make a diagram or storyboard showing how your chosen tool works from input to output."
+          },
+          {
+            title: "User Journey",
+            description: "Describe step by step what a typical user does and sees when using this technology."
+          },
+          {
+            title: "Improve It!",
+            description: "Find at least two weak points and propose concrete improvements."
+          }
+        ]
+      },
+      "Human Body & Health": {
+        subtopics: [
+          "Sleep cycles",
+          "Reflexes",
+          "Muscles and movement",
+          "Heart rate patterns",
+          "Food energy",
+          "Learning & focus",
+          "Breathing and oxygen",
+          "Stress responses",
+          "Hydration & performance"
+        ],
+        projects: [
+          {
+            title: "Body Data Diary",
+            description: "Track one variable for several days and turn it into graphs and reflections."
+          },
+          {
+            title: "Myth vs Reality",
+            description: "Collect common beliefs about your topic and compare them with reliable sources."
+          },
+          {
+            title: "Micro-Change Experiment",
+            description: "Try one small change and observe how it affects you over a week."
+          }
+        ]
+      },
+      "Art, Music & Creativity": {
+        subtopics: [
+          "How guitars make sound",
+          "Rhythm & beats",
+          "Drawing techniques",
+          "Colors & pigments",
+          "Stop-motion animation",
+          "Architecture shapes",
+          "Photography basics",
+          "Perspective in art",
+          "Digital illustration"
+        ],
+        projects: [
+          {
+            title: "Before/After Creation",
+            description: "Create a piece (drawing, beat, photo) and document your process in 3–4 steps."
+          },
+          {
+            title: "Pattern Hunter",
+            description: "Find and analyze patterns in your chosen art form."
+          },
+          {
+            title: "Remix & Re-design",
+            description: "Take an existing piece and redesign one aspect: color, rhythm, perspective, or layout."
+          }
+        ]
+      },
+      "Society & Everyday Life": {
+        subtopics: [
+          "Public transport systems",
+          "Waste and recycling flows",
+          "Voting models",
+          "Urban spaces",
+          "Maps and navigation",
+          "School timetables",
+          "Community networks",
+          "Food supply chains",
+          "Postal and delivery systems"
+        ],
+        projects: [
+          {
+            title: "System Map",
+            description: "Draw a map or diagram showing how your chosen system works and how the parts interact."
+          },
+          {
+            title: "One Day in the System",
+            description: "Follow one item (a parcel, a bus, a piece of trash) through the system and tell its story."
+          },
+          {
+            title: "Fix a Weak Spot",
+            description: "Identify a problem in the system and propose at least one realistic improvement."
+          }
+        ]
+      },
+      "Personal Skills & Self-Experiments": {
+        subtopics: [
+          "Memory strategies",
+          "Study habits",
+          "Mood tracking",
+          "Reaction-time tests",
+          "Fitness mini-challenges",
+          "Time-management",
+          "Sleep improvements",
+          "Habit building",
+          "Goal-setting"
+        ],
+        projects: [
+          {
+            title: "Baseline & Progress",
+            description: "Measure your starting point for one skill or habit and track progress over time."
+          },
+          {
+            title: "Experiment with Strategies",
+            description: "Try two or three different strategies and compare which one works best for you."
+          },
+          {
+            title: "My Personal Guide",
+            description: "Create a short “guide for future me” summarizing what truly helps."
+          }
+        ]
+      },
+      "Economics": {
+        subtopics: [
+          "Supply and demand",
+          "How prices change",
+          "Money flow in a town",
+          "Simple budgeting",
+          "Saving vs spending",
+          "Why things become expensive",
+          "Work and productivity",
+          "Markets and trade",
+          "Advertising and choices"
+        ],
+        projects: [
+          {
+            title: "Price Detective",
+            description: "Track the price of one product and look for patterns and possible reasons."
+          },
+          {
+            title: "Mini-Budget",
+            description: "Design a simple budget for a small event or a month of pocket money."
+          },
+          {
+            title: "Market Story",
+            description: "Describe how supply and demand affect one real product you know."
+          }
+        ]
+      },
+      "Design": {
+        subtopics: [
+          "Product design basics",
+          "User experience (UX)",
+          "Simple prototyping",
+          "Layout & typography",
+          "Packaging design",
+          "Everyday object redesign",
+          "App interface sketching",
+          "Color palettes",
+          "Form vs function"
+        ],
+        projects: [
+          {
+            title: "Redesign an Object",
+            description: "Choose an everyday object and redesign it for a specific user with clear needs."
+          },
+          {
+            title: "Interface Sketch",
+            description: "Sketch an app screen or poster layout with clear visual hierarchy."
+          },
+          {
+            title: "Test & Feedback",
+            description: "Show your design to at least one person, collect feedback, and refine it once."
+          }
+        ]
+      }
+    };
 
-    const projects = [
-      "Template Project 1",
-      "Template Project 2",
-      "Template Project 3",
-      "Template Project 4",
-      "Template Project 5",
-      "Template Project 6",
-      "Template Project 7",
-      "Template Project 8"
-    ];
+    const topics = Object.keys(mdlData);
 
     const roles = [
-      "Template Role 1",
-      "Template Role 2",
-      "Template Role 3",
-      "Template Role 4",
-      "Template Role 5",
-      "Template Role 6",
-      "Template Role 7",
-      "Template Role 8"
+      "Designer / Maker",
+      "Researcher / Investigator",
+      "Data Analyst",
+      "Explainer / Communicator",
+      "Coordinator / Project Manager",
+      "Tester / Quality Checker",
+      "Storyteller / Visualizer",
+      "Support / Helper"
     ];
 
     const problems = [
-      "Template Problem 1",
-      "Template Problem 2",
-      "Template Problem 3",
-      "Template Problem 4",
-      "Template Problem 5",
-      "Template Problem 6",
-      "Template Problem 7",
-      "Template Problem 8"
+      "Define a clear driving question",
+      "Collect and organize data or observations",
+      "Design and run a small experiment",
+      "Prototype and revise a solution",
+      "Explain your project to a new audience",
+      "Turn your results into a visual story",
+      "Plan next steps or extensions",
+      "Reflect on what you learned"
     ];
 
     // --- STATE -------------------------------------------------------
@@ -713,7 +944,7 @@
       if (errEl) errEl.classList.add("visible");
     }
 
-    // --- RENDER TILES -----------------------------------------------
+    // --- RENDER HELPERS ----------------------------------------------
     function renderTiles(containerId, items, options = {}) {
       const container = $("#" + containerId);
       container.innerHTML = "";
@@ -735,6 +966,41 @@
       });
     }
 
+    function renderSubtopicsAndProjectsFor(topic) {
+      const config = mdlData[topic];
+      const subList = $("#subtopics-list");
+      subList.innerHTML = "";
+
+      if (config && Array.isArray(config.subtopics)) {
+        config.subtopics.forEach(sub => {
+          const li = document.createElement("li");
+          li.textContent = sub;
+          subList.appendChild(li);
+        });
+      }
+
+      const projectsConfig = (config && Array.isArray(config.projects)) ? config.projects : [];
+      const container = $("#projects-grid");
+      container.innerHTML = "";
+
+      projectsConfig.forEach(project => {
+        const btn = document.createElement("button");
+        btn.className = "tile";
+        btn.innerHTML = `
+          <span class="label-main">${project.title}</span>
+          <span class="label-sub">${project.description}</span>
+        `;
+        btn.addEventListener("click", () => {
+          clearSelection("#projects-grid");
+          btn.classList.add("selected");
+          state.project = project.title;
+          updateSummary();
+          setStep(3);
+        });
+        container.appendChild(btn);
+      });
+    }
+
     // --- INITIALISE --------------------------------------------------
     function init() {
       // Step 1: Topics
@@ -744,21 +1010,10 @@
           clearSelection("#topics-grid");
           btn.classList.add("selected");
           state.topic = topic;
+          state.project = null; // reset project when changing topic
           updateSummary();
+          renderSubtopicsAndProjectsFor(topic);
           setStep(2);
-        }
-      });
-
-      // Step 2: Projects
-      renderTiles("projects-grid", projects, {
-        showIndex: true,
-        prefix: "Project",
-        onClick: (project, btn) => {
-          clearSelection("#projects-grid");
-          btn.classList.add("selected");
-          state.project = project;
-          updateSummary();
-          setStep(3);
         }
       });
 
@@ -807,6 +1062,7 @@
         clearSelection("#projects-grid");
         clearSelection("#roles-grid");
         clearSelection("#problems-grid");
+        $("#subtopics-list").innerHTML = "";
         updateSummary();
         setStep(1);
       });
